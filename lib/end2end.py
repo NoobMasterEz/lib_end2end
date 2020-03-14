@@ -3,7 +3,7 @@ from Abstract_end2end import funtion_implement as fi
 
 
 
-class Model(object):
+class E2E(fi):
     _X=None
     _Y=None
 
@@ -15,14 +15,16 @@ class Model(object):
         """
         self._X= tf.placeholder(kwargs["x"][0],kwargs["x"][1])
         self._Y= tf.placeholder(kwargs["y"][0],kwargs["y"][1])
-    
+        super(self._X,self._Y)
+
     @property
-    def test(self):
-        print(fi.weight_variable([5, 5, 3, 24]))
+    def Model(self):
+        W_conv, b_conv, h_conv=layer_conv([5, 5, 3, 24],[24],x_image=self._X)
+        print(W_conv, b_conv, h_conv)
 
 
 if __name__ == "__main__":
     
-    a=Model(x=[tf.float32,[None,66,200,3] ],y=[tf.float32,[None,1] ])
+    a=E2E(x=[tf.float32,[None,66,200,3] ],y=[tf.float32,[None,1] ])
 
     a.test
