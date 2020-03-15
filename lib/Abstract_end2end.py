@@ -1,17 +1,22 @@
 
-from tensorflow import nn ,Variable,truncated_normal,constant
+from tensorflow import nn,Variable,constant
+import tensorflow.compat.v1 as tf
 
 class funtion_implement(object):
+
+    def __init__(self):
+        pass
+
     @staticmethod
     def weight_variable(shape):
-        return Variable(truncated_normal(shape, stddev=0.1))
+        return Variable(tf.truncated_normal(shape, stddev=0.1))
 
     @staticmethod
     def bias_variable(shape):
         return Variable(constant(0.1,shape=shape))
     
     @staticmethod
-    def conv2d(x, W, stride):\
+    def conv2d(x, W, stride):
         """
         input: A Tensor. Must be one of the following types: half, bfloat16, float32, float64. A 4-D tensor. 
                 The dimension order is interpreted according to the value of data_format, see below for details.
@@ -30,19 +35,25 @@ class funtion_implement(object):
         return nn.conv2d(x, W, strides=[1, stride, stride, 1], padding='VALID')
 
 
-class Model_e2e(funtion_implement):
+class Returnvalue:
+    y0: float
+    y1: float
+    y3: float
+
+class Model_e2e(object):
 
 
     def __init__(self,X,Y):
         self.X,self.Y=X,Y
 
-    @property
-    def layer_conv(self,*arges,**kwage):
-
-        W_conv = weight_variable(arges[0])
-        b_conv = bias_variable(arges[1])
-        h_conv = nn.relu(conv2d(kwage["x_image"], W_conv, kwage["stride"]) + b_conv)
-
-        return W_conv, b_conv, h_conv
+    @classmethod
+    def layer_conv(cls,**kwage):
+        W_conv = funtion_implement.weight_variable(kwage["kernel"])
+        
+        b_conv = funtion_implement.bias_variable(kwage["shape"])
+        print(W_conv,b_conv)
+        h_conv = nn.relu(funtion_implement.conv2d(kwage["x_image"], W_conv,kwage["stride"] )+ b_conv)
+        
+        return W_conv,b_conv,h_conv
 
     
