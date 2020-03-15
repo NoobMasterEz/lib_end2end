@@ -41,6 +41,9 @@ class E2E(fi):
         return output
 
 
+
+
+
 if __name__ == "__main__":
     
     a=E2E(x=[tf.float32,[None,66,200,3] ],y=[tf.float32,[None,1] ])

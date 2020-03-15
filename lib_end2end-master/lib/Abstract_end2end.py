@@ -29,7 +29,7 @@ class funtion_implement(object):
         """
         return nn.conv2d(x, W, strides=[1, stride, stride, 1], padding='VALID')
 
-class ReturnValue():
+class ReturnValue(Enum):
     y1:int
     y2:int
     y3:int 
