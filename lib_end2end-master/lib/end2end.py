@@ -40,12 +40,13 @@ class E2E(fi):
         output=layer_FullyConnect(weight_variable=[10, 1],bias_variable=[1],h_conv5s=fully_data_result_4["h_fc1_drop"],W_fc=fully_data_result_4["W_fc"],b_fc=fully_data_result_4["b_fc"])
         return output
 
+    def train(self):
 
-
-
+"""
 
 if __name__ == "__main__":
     
     a=E2E(x=[tf.float32,[None,66,200,3] ],y=[tf.float32,[None,1] ])
 
     a.test
+"""

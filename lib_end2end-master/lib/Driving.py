@@ -56,7 +56,7 @@ class Driving_Data(object):
     @property
     def Getter_load_data(self):
         """
-        return train 2 diaminion  and like val
+        return train 2 diaminion  and like 
 
         """
         return self.Load_Batch(self.__Shuffle["val"]),self.Load_Batch(self.__Shuffle["val"])
@@ -86,9 +86,10 @@ class Driving_Data(object):
                 
                 self.RADIANS_STEER.append(self.Steering_wheel_angle(i))
         
-
+"""
 if __name__ == "__main__":
     dir='data.txt'
     obj=Driving_Data(dir,batch_size=60)
     train,val=obj.Getter_load_data
     print(val)
+"""
