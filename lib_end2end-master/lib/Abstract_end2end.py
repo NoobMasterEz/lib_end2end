@@ -1,4 +1,4 @@
-
+import tensorflow as tf 
 from tensorflow import nn ,Variable,truncated_normal,constant
 
 class funtion_implement(object):
@@ -11,7 +11,7 @@ class funtion_implement(object):
         return Variable(constant(0.1,shape=shape))
     
     @staticmethod
-    def conv2d(x, W, stride):\
+    def conv2d(x, W, stride):
         """
         input: A Tensor. Must be one of the following types: half, bfloat16, float32, float64. A 4-D tensor. 
                 The dimension order is interpreted according to the value of data_format, see below for details.
@@ -37,23 +37,23 @@ class ReturnValue(Enum):
 class Model_e2e(funtion_implement):
     
     _INSTANCE_SHAPE=[-1, 1152]
-
+    
     def __init__(self,X,Y):
         self.X,self.Y=X,Y
 
     @property
     def layer_conv(self,**kwage):
 
-        W_conv = weight_variable(kwage["bias_variable"])
-        b_conv = bias_variable(kwage["weight_variable"])
-        h_conv = nn.relu(conv2d(kwage["x_image"], W_conv, kwage["stride"]) + b_conv)
+        W_conv = super().weight_variable(kwage["bias_variable"])
+        b_conv = super().bias_variable(kwage["weight_variable"])
+        h_conv = nn.relu(super().conv2d(kwage["x_image"], W_conv, kwage["stride"]) + b_conv)
         return W_conv, b_conv, h_conv
 
     @property
     def layer_FirstConnectNN(self,**kwage):
         
-        W_fc1 = weight_variable(kwage["weight_variable"])
-        b_fc1 = bias_variable(kwage["bias_variable"])
+        W_fc1 = super().weight_variable(kwage["weight_variable"])
+        b_fc1 = super().bias_variable(kwage["bias_variable"])
 
         h_conv5_flat = tf.reshape(kwage["h_conv5s"], _INSTANCE_SHAPE)
 
@@ -63,16 +63,16 @@ class Model_e2e(funtion_implement):
         h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
 
         return {
-            "h_fc1"=h_fc1,
-            "h_fc1_drop"=h_fc1_drop,
-            "keep_prob"=keep_prob
+            "h_fc1":h_fc1,
+            "h_fc1_drop":h_fc1_drop,
+            "keep_prob":keep_prob
         }
 
     @property
     def layer_FullyConnect(self,**kwage):
 
-        W_fc1 = weight_variable(kwage["bias_variable"])
-        b_fc1 = bias_variable(kwage["weight_variable"])
+        W_fc1 = super().weight_variable(kwage["bias_variable"])
+        b_fc1 = super().bias_variable(kwage["weight_variable"])
 
         h_fc1 = tf.nn.relu(tf.matmul(kwage["h_fc_drop"], W_fc1) + b_fc1)
         h_fc1_drop = tf.nn.dropout(h_fc1, kwage["keep_prob"])
@@ -86,8 +86,8 @@ class Model_e2e(funtion_implement):
     
     @property
     def layer_LastConnect(self,**kwage):
-        W_fc1 = weight_variable(kwage["bias_variable"])
-        b_fc1 = bias_variable(kwage["weight_variable"])
+        W_fc1 = super().weight_variable(kwage["bias_variable"])
+        b_fc1 = super().bias_variable(kwage["weight_variable"])
 
         y = tf.multiply(tf.atan(tf.matmul(kwage["h_fc_drop"], kwage["W_fc"]) +kwage["b_fc"]), 2) #scale the atan output
         return y 

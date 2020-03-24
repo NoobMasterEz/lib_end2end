@@ -43,7 +43,7 @@ class Driving_Data(object):
         return Data_Train
 
     @property
-    def __Number_image():
+    def Number_image():
         return len(NAME_PITRUE)
 
     @staticmethod
@@ -59,9 +59,9 @@ class Driving_Data(object):
         return train 2 diaminion  and like 
 
         """
-        return self.Load_Batch(self.__Shuffle["val"]),self.Load_Batch(self.__Shuffle["val"])
+        return self.Load(self.__Shuffle["train"]),self.Load(self.__Shuffle["val"])
 
-    def Load_Batch(self,resutl):
+    def Load(self,resutl,):
         """
         - แบ่งข้อมูลการ train 
         - Run ตาม batch size
