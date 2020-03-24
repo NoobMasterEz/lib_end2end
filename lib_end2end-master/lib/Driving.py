@@ -43,7 +43,7 @@ class Driving_Data(object):
         return Data_Train
 
     @property
-    def __Number_image():
+    def Number_image():
         return len(NAME_PITRUE)
 
     @staticmethod
@@ -56,12 +56,12 @@ class Driving_Data(object):
     @property
     def Getter_load_data(self):
         """
-        return train 2 diaminion  and like val
+        return train 2 diaminion  and like 
 
         """
-        return self.Load_Batch(self.__Shuffle["val"]),self.Load_Batch(self.__Shuffle["val"])
+        return self.Load(self.__Shuffle["train"]),self.Load(self.__Shuffle["val"])
 
-    def Load_Batch(self,resutl):
+    def Load(self,resutl,):
         """
         - แบ่งข้อมูลการ train 
         - Run ตาม batch size
@@ -85,9 +85,13 @@ class Driving_Data(object):
                 self.NAME_PITRUE.append(self.PATH+"data/"+i.split()[0])
                 
                 self.RADIANS_STEER.append(self.Steering_wheel_angle(i))
+<<<<<<< HEAD
 
 # exampla      
   
+=======
+        
+>>>>>>> 0b4bb3c6a705dff592b1d24a565e87933d01e625
 """
 if __name__ == "__main__":
     dir='data.txt'
