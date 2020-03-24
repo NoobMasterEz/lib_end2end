@@ -85,10 +85,13 @@ class Driving_Data(object):
                 self.NAME_PITRUE.append(self.PATH+"data/"+i.split()[0])
                 
                 self.RADIANS_STEER.append(self.Steering_wheel_angle(i))
-        
 
+# exampla      
+  
+"""
 if __name__ == "__main__":
     dir='data.txt'
     obj=Driving_Data(dir,batch_size=60)
     train,val=obj.Getter_load_data
     print(val)
+"""
