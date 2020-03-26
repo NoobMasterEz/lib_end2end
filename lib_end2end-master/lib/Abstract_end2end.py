@@ -1,11 +1,6 @@
-<<<<<<< HEAD
 
-from tensorflow import nn,Variable,constant
-import tensorflow.compat.v1 as tf
-=======
 import tensorflow as tf 
-from tensorflow import nn ,Variable,truncated_normal,constant
->>>>>>> 0b4bb3c6a705dff592b1d24a565e87933d01e625
+
 
 class funtion_implement(object):
 
@@ -14,11 +9,11 @@ class funtion_implement(object):
 
     @staticmethod
     def weight_variable(shape):
-        return Variable(tf.truncated_normal(shape, stddev=0.1))
+        return tf.Variable(tf.truncated_normal(shape, stddev=0.1))
 
     @staticmethod
     def bias_variable(shape):
-        return Variable(constant(0.1,shape=shape))
+        return tf.Variable(tf.constant(0.1,shape=shape))
     
     @staticmethod
     def conv2d(x, W, stride):
@@ -37,12 +32,8 @@ class funtion_implement(object):
                 this should be in the form [[0, 0], [0, 0], [pad_top, pad_bottom], [pad_left, pad_right]].
 
         """
-        return nn.conv2d(x, W, strides=[1, stride, stride, 1], padding='VALID')
+        return tf.nn.conv2d(x, W, strides=[1, stride, stride, 1], padding='VALID')
 
-class ReturnValue(Enum):
-    y1:int
-    y2:int
-    y3:int 
 
 class Model_e2e(funtion_implement):
     
@@ -51,25 +42,27 @@ class Model_e2e(funtion_implement):
     def __init__(self,X,Y):
         self.X,self.Y=X,Y
 
-    @property
+    @classmethod
     def layer_conv(self,**kwage):
 
         W_conv = super().weight_variable(kwage["bias_variable"])
         b_conv = super().bias_variable(kwage["weight_variable"])
-        h_conv = nn.relu(super().conv2d(kwage["x_image"], W_conv, kwage["stride"]) + b_conv)
+        h_conv = tf.nn.elu(super().conv2d(kwage["x_image"], W_conv, kwage["stride"]) + b_conv)
+        print("[+]-- CONV> ",h_conv)
         return W_conv, b_conv, h_conv
 
-    @property
+    @classmethod
     def layer_FirstConnectNN(self,**kwage):
         
         W_fc1 = super().weight_variable(kwage["weight_variable"])
         b_fc1 = super().bias_variable(kwage["bias_variable"])
 
-        h_conv5_flat = tf.reshape(kwage["h_conv5s"], _INSTANCE_SHAPE)
-
+        h_conv5_flat = tf.reshape(kwage["h_conv5s"], self._INSTANCE_SHAPE)
 
         keep_prob = tf.placeholder(tf.float32)
-        h_fc1 = tf.nn.relu(tf.matmul(h_conv5_flat, W_fc1) + b_fc1)
+        y=tf.add(tf.matmul(h_conv5_flat, W_fc1) , b_fc1)
+        print("[+]-- FirstConnectNN> ",y)
+        h_fc1 = tf.nn.elu(y)
         h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
 
         return {
@@ -78,13 +71,14 @@ class Model_e2e(funtion_implement):
             "keep_prob":keep_prob
         }
 
-    @property
+    @classmethod
     def layer_FullyConnect(self,**kwage):
 
         W_fc1 = super().weight_variable(kwage["bias_variable"])
         b_fc1 = super().bias_variable(kwage["weight_variable"])
-
-        h_fc1 = tf.nn.relu(tf.matmul(kwage["h_fc_drop"], W_fc1) + b_fc1)
+        y=tf.add(tf.matmul(kwage["h_fc_drop"], W_fc1),b_fc1)
+        h_fc1 = tf.nn.elu(y)
+        print(h_fc1)
         h_fc1_drop = tf.nn.dropout(h_fc1, kwage["keep_prob"])
 
         return {
@@ -94,7 +88,7 @@ class Model_e2e(funtion_implement):
             "h_fc_drop":h_fc1_drop
         }
     
-    @property
+    @classmethod
     def layer_LastConnect(self,**kwage):
         W_fc1 = super().weight_variable(kwage["bias_variable"])
         b_fc1 = super().bias_variable(kwage["weight_variable"])
