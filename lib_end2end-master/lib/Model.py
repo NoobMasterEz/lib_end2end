@@ -32,3 +32,4 @@ class E2E(object):
 
 
     def fit(self):
+        pass
