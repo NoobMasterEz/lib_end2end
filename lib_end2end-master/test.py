@@ -1,5 +1,6 @@
 from lib.end2end import E2E
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 
 if __name__ == "__main__":
         a=E2E(
