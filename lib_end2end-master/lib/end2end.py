@@ -1,8 +1,10 @@
 import tensorflow as tf 
-import Driving 
+import Driving
 import os 
 from .Abstract_end2end import Model_e2e as fi 
 from tensorflow.core.protobuf import saver_pb2
+tf.disable_v2_behavior()
+
 
 
 
