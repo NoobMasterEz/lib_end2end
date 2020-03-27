@@ -107,7 +107,6 @@ class E2E(fi):
                     checkpoint_path = os.path.join(self.LOGDIR, "model.ckpt")
                     filename = saver.save(self.Session, checkpoint_path)
                 print("Model saved in file: %s" % filename)
-                
         print("Run the command line:\n" \
                 "--> tensorboard --logdir=./logs " \
                 "\nThen open http://0.0.0.0:6006/ into your web browser")
