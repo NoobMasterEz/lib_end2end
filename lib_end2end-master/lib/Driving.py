@@ -85,13 +85,7 @@ class Driving_Data(object):
                 self.NAME_PITRUE.append(self.PATH+"data/"+i.split()[0])
                 
                 self.RADIANS_STEER.append(self.Steering_wheel_angle(i))
-<<<<<<< HEAD
-
-# exampla      
-  
-=======
         
->>>>>>> 0b4bb3c6a705dff592b1d24a565e87933d01e625
 """
 if __name__ == "__main__":
     dir='data.txt'

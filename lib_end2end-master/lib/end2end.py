@@ -1,8 +1,9 @@
 import tensorflow as tf 
-from Abstract_end2end import funtion_implement  as fi 
-from tensorflow.core.protobuf import saver_pb2
 import Driving 
 import os 
+from .Abstract_end2end import Model_e2e as fi 
+from tensorflow.core.protobuf import saver_pb2
+
 
 
 
@@ -43,24 +44,33 @@ class E2E(fi):
     @property
     def Model(self):
         ##############################  CONVORUTION  ##########################
-        # Layer 1 convor
+        # Layer 1 convor 24@31x98
         W_conv1, b_conv1, h_conv1=fi.layer_conv(bias_variable=[5, 5, 3, 24],weight_variable=[24],x_image=self._X,stride=2)
-        # Layer 2 convor
+        # Layer 2 convor 36@14x47
         W_conv2, b_conv2, h_conv2=fi.layer_conv(bias_variable=[5, 5, 24, 36],weight_variable=[36],x_image=h_conv1,stride=2)
-        #Layer 3  convor 
-        W_conv3, b_conv3, h_conv3=fi.layer_conv(bias_variable=[5, 5, 36, 480],weight_variable=[48],x_image=h_conv2,stride=2)
-        # Layer 4 convor
-        W_conv4, b_conv4, h_conv4=fi.layer_conv(bias_variable=[5, 5, 48, 64],weight_variable=[64],x_image=h_conv3,stride=1)
-        # Layer 5 convor 
-        W_conv5, b_conv5, h_conv5=fi.layer_conv(bias_variable=[5, 5, 64, 64],weight_variable=[64],x_image=h_conv4,stride=1)
+        #Layer 3  convor 48@5x22
+        W_conv3, b_conv3, h_conv3=fi.layer_conv(bias_variable=[5, 5, 36, 48],weight_variable=[48],x_image=h_conv2,stride=2)
+        # Layer 4 convor 64@3x20
+        W_conv4, b_conv4, h_conv4=fi.layer_conv(bias_variable=[3, 3, 48, 64],weight_variable=[64],x_image=h_conv3,stride=1)
+        # Layer 5 convor 64@1x18
+        W_conv5, b_conv5, h_conv5=fi.layer_conv(bias_variable=[3, 3, 64, 64],weight_variable=[64],x_image=h_conv4,stride=1)
         
         ############################## FULLYCONNECT ###########################
+        """
+        Nvidia-end-to-end-self-driving-cars
 
+        |_1164@1x1
+        |_100@1x1
+        |_50@1x1
+        |_10@1x1
+        |_1@1x1
+
+        """
         self.fully_data_result_1=fi.layer_FirstConnectNN(weight_variable=[1152, 1164],bias_variable=[1164],h_conv5s=h_conv5)
-        fully_data_result_2=fi.layer_FullyConnect(weight_variable=[1164, 100],bias_variable=[100],h_conv5s=fully_data_result_1["h_fc1_drop"],keep_prob=fully_data_result_1["keep_prob"])
-        fully_data_result_3=fi.layer_FullyConnect(weight_variable=[100, 50],bias_variable=[50],h_conv5s=fully_data_result_2["h_fc1_drop"],keep_prob=fully_data_result_1["keep_prob"])
-        fully_data_result_4=fi.layer_FullyConnect(weight_variable=[50, 10],bias_variable=[10],h_conv5s=fully_data_result_3["h_fc1_drop"],keep_prob=fully_data_result_1["keep_prob"])
-        output=fi.layer_FullyConnect(weight_variable=[10, 1],bias_variable=[1],h_conv5s=fully_data_result_4["h_fc1_drop"],W_fc=fully_data_result_4["W_fc"],b_fc=fully_data_result_4["b_fc"])
+        fully_data_result_2=fi.layer_FullyConnect(weight_variable=[1164, 100],bias_variable=[100],h_fc_drop=self.fully_data_result_1["h_fc1_drop"],keep_prob=self.fully_data_result_1["keep_prob"])
+        fully_data_result_3=fi.layer_FullyConnect(weight_variable=[100, 50],bias_variable=[50],h_conv5s=fully_data_result_2["h_fc1_drop"],keep_prob=self.fully_data_result_1["keep_prob"])
+        fully_data_result_4=fi.layer_FullyConnect(weight_variable=[50, 10],bias_variable=[10],h_conv5s=fully_data_result_3["h_fc1_drop"],keep_prob=self.fully_data_result_1["keep_prob"])
+        output=fi.layer_LastConnect(weight_variable=[10, 1],bias_variable=[1],h_conv5s=fully_data_result_4["h_fc1_drop"],W_fc=fully_data_result_4["W_fc"],b_fc=fully_data_result_4["b_fc"])
         return output
 
     @property
@@ -70,6 +80,7 @@ class E2E(fi):
     @property
     def __train_stepByAdam(self):
         return tf.train.AdamOptimizer(1e-4).minimize(self.__Loss)
+
     @property
     def Board(self):
         # create a summary to monitor cost tensor
@@ -79,7 +90,7 @@ class E2E(fi):
         
 
 
-    def fit(self,train_img,train_label):
+    def fit(self):
         
         self.Session.run(tf.initialize_all_variables())
         merged_summary_op=self.Board()
