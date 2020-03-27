@@ -89,6 +89,7 @@ class Train_Test(Process):
 
 
         
+        
 if __name__ == '__main__':
     a=Train_Test(train=0.8,test=0.2,Namefile="../data.txt")
     print(a.Load(60,"test"))
